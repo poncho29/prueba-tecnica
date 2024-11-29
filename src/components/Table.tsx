@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import { Brand } from '@prisma/client';
 
-import { CustomPagination } from './common/CustomPagination';
+import { CustomPagination } from './CustomPagination';
 import { DeleteBrandButtton } from './DeleteBrandButtton';
 import { CreateBrandButton } from './CreateBrandButton';
 

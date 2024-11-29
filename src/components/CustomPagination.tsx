@@ -1,16 +1,16 @@
 'use client';
 
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+
 import {
-  Pagination,
   PaginationContent,
   PaginationItem,
   PaginationLink,
-  // PaginationNext,
-  // PaginationPrevious,
-} from "@/components/ui/pagination"
+  Pagination
+} from "@/components/ui/pagination";
+
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 
 interface Props {
