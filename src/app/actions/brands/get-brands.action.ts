@@ -5,17 +5,22 @@ interface GetBrandsProps {
   skip?: number | null;
 }
 
-export const getBrands = async ({ take = 5, skip = 0 }: GetBrandsProps) => {
+export const getBrands = async ({ take = 6, skip }: GetBrandsProps) => {
   try {
-    const res = await prisma.brand.findMany({
-      take: Number(take),
-      skip: Number(skip),
-    });
+    const currentPage = skip ? (skip - 1) * Number(take) : 1;
 
-    return { brands: res, error: null };
+    const [brands, count] = await prisma.$transaction([
+      prisma.brand.findMany({
+        take: Number(take),
+        skip: currentPage,
+      }),
+      prisma.brand.count(),
+    ]);
+
+    return { brands, totalPages: Math.ceil(count / 6), error: null };
   } catch (error) {
     const errMsg = error instanceof Error ? error.message : "Ups ocurrio un error";
-    return { brands: [], error: errMsg };
+    return { brands: [], totalPages: 1, error: errMsg };
   }
 }
 

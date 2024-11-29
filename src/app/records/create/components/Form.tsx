@@ -2,17 +2,22 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+
 import { Brand } from "@prisma/client";
+import toast from "react-hot-toast";
 import { useFormik } from "formik";
+
 import { createBrand, updateBrand } from "@/app/actions";
+
 import { INITIAL_VALUES, validationSchema } from '../helpers/createBrand.helper';
 import {
-    Breadcrumb,
+    BreadcrumbSeparator,
     BreadcrumbItem,
     BreadcrumbLink,
     BreadcrumbList,
-    BreadcrumbSeparator,
+    Breadcrumb,
 } from "@/components/ui/breadcrumb";
+
 
 interface Props {
     isEditing?: boolean;
@@ -29,7 +34,7 @@ export default function StepsForm({ isEditing = false, brandData = null }: Props
             formik.setValues({
                 brand: brandData.brandName,
                 trademarkOwner: brandData.trademarkOwner,
-                status: brandData.status ? "activo" : "inactivo", // Asegúrate de mapear el booleano a un string válido
+                status: brandData.status ? "activo" : "inactivo",
             });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -58,7 +63,7 @@ export default function StepsForm({ isEditing = false, brandData = null }: Props
                     const { brand, error } = await createBrand({
                         brandName: values.brand,
                         trademarkOwner: values.trademarkOwner,
-                        status: false
+                        status: values.status === "activo"
                     });
 
                     if (!brand) {
@@ -66,10 +71,11 @@ export default function StepsForm({ isEditing = false, brandData = null }: Props
                     }
                 }
 
+                toast.success('Marca registrada con exito');
                 router.push("/records");
             } catch (error) {
                 const errMsg = error instanceof Error ? error.message : "Ups ocurrio un error al registrar la marca";
-                console.log(errMsg);
+                toast.error(errMsg);
             } finally {
                 setLoading(false);
             }
